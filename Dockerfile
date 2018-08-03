@@ -17,7 +17,7 @@ ENV SMTP_SERVER=localhost \
 	SERVER_1="<server_spitzname>;<server_name>;<mac>;<ip>"
 
 RUN  apt update \
-	&& apt install gettext-base curl iputils-ping \
+	&& apt install -y curl iputils-ping \
 	&& rm -rf /var/lib/apt/lists/* \
 	&& pip install --no-cache-dir requests pandas
 

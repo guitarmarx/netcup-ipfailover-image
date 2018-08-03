@@ -1,5 +1,3 @@
-import pandas
-
 
 class Server:
     id = ""
@@ -7,9 +5,8 @@ class Server:
     mac = ""
     ip = ""
 
-    def __init__(self.name):
-        servers = pandas.read_csv(serverFile, sep=";", names=[
-                                  "id", "name", "mac", "ip"])
-
-    def getServerInfo(server_name):
-        return servers[servers["name"] == server_name]
+    def __init__(id, name, mac, ip):
+        self.id = id
+        self.name = name
+        self.mac = mac
+        self.ip = ip
