@@ -5,7 +5,7 @@ LABEL maintainer="meteorIT GbR Marcus Kastner"
 ENV SMTP_SERVER=localhost \
 	SMTP_PORT=25 \
 	SMTP_USER="<SMTP_USER>" \
-	SMTP_PASS="<SMTP_PASS>" \
+	SMTP_PASSWORD="<SMTP_PASS>" \
 	SMTP_SOURCE_MAIL=failover@localhost \
 	SMTP_TARGET_MAIL=target@localhost \
 	NETCUP_USER="<NETCUP_USER>" \
@@ -19,7 +19,7 @@ ENV SMTP_SERVER=localhost \
 RUN  apt update \
 	&& apt install gettext-base curl iputils-ping \
 	&& rm -rf /var/lib/apt/lists/* \
-	&& pip install --no-cache-dir requests pandas
+	&& pip install --no-cache-dir requests
 
 
 COPY scripts/ /tmp/scripts/
