@@ -1,5 +1,44 @@
 import os
+import logging
+import smtplib
+import time
+from email.MIMEMultipart import MIMEMultipart
+from email.MIMEText import MIMEText
+from .server import Server
 from ConfigParser import SafeConfigParser
+
+
+def getFailoverServers():
+
+    # read failover server strings
+    serversStrings = []
+    failoverServers = []
+    for parameter in os.environ:
+        if "SERVER_" in parameter:
+            serversStrings.append((os.environ[parameter]))
+
+    # split strings and create server objects
+    for serverString in serversStrings:
+        serverInfos = serverString.split(str=";")
+        failoverServer = Server(
+            serverInfos[0], serverInfos[1], serverInfos[2], serverInfos[3])
+        failoverServers.append(failoverServer)
+
+    return failoverServers
+
+
+def isFailoverIPPingable(failoverIP, timeBetweenPings):
+    isFailoverIPPingable = True
+
+    if not isPingable(failoverIP):
+        # start wait time
+        time.sleep(timeBetweenPings)
+
+        # Second Try: ping failover IP
+        if not isPingable(failoverIP):
+            isFailoverIPPingable = False
+
+    return isFailoverIPPingable
 
 
 def getMessages(file):
@@ -18,13 +57,13 @@ def isPingable(ip):
         return False
 
 
-def initLogging():
+def initLogging(logFormat, logFile):
     logger = logging.getLogger()
     logger.setLevel(logging.INFO)
-    formatter = logging.Formatter(config.get('logging', 'logFormat'))
+    formatter = logging.Formatter(logFormat)
 
     # Init file logging
-    handler = logging.FileHandler(config.get('logging', 'logFile'))
+    handler = logging.FileHandler(logFile)
     handler.setFormatter(formatter)
     logger.addHandler(handler)
 
@@ -32,29 +71,23 @@ def initLogging():
     handler2 = logging.StreamHandler()
     handler2.setFormatter(formatter)
     logger.addHandler(handler2)
+    return logger
 
 
-def sendNotification(body, returnmessage):
+def sendNotification(smtpServer, smtpPort, smtpUser, smtpPass, smtpSourceMail, smtpTargetMail, mailBody):
+    # Message definition
+    msg = MIMEMultipart()
+    msg['Subject'] = 'Backend Info'
+    msg['From'] = smtpSourceMail
+    msg['To'] = smtpTargetMail
+    body = mailBody
+    msg.attach(MIMEText(body, 'plain'))
 
-    try:
-        # Message definition
-        msg = MIMEMultipart()
-        msg['Subject'] = 'Backend Info'
-        msg['From'] = smtp_source_mail
-        msg['To'] = smtp_target_mail
-        body = body + returnmessage
-        msg.attach(MIMEText(body, 'plain'))
+    # Open Connection
+    server = smtplib.SMTP(smtpServer, smtpPort)
+    server.starttls()
+    server.login(smtpUser, smtpPass)
 
-        # Open Connection
-        server = smtplib.SMTP(smtp_server, smtp_port)
-        server.starttls()
-        server.login(smtp_user, smtp_pass)
-
-        # Send Mail
-        server.sendmail(smtp_source_mail, [smtp_target_mail], msg.as_string())
-        server.quit()
-        logger.info('Mail notifiaction sent')
-    except Exception as e:
-        logger.error(str(e))
-
-    return
+    # Send Mail
+    server.sendmail(smtpSourceMail, [smtpTargetMail], msg.as_string())
+    server.quit()
