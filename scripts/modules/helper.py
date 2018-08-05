@@ -19,7 +19,7 @@ def getFailoverServers():
 
     # split strings and create server objects
     for serverString in serversStrings:
-        serverInfos = serverString.split(str=";")
+        serverInfos = serverString.split(';')
         failoverServer = Server(
             serverInfos[0], serverInfos[1], serverInfos[2], serverInfos[3])
         failoverServers.append(failoverServer)

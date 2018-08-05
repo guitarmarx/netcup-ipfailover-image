@@ -14,17 +14,15 @@ class Server:
         self.mac = mac
         self.ip = ip
 
+    def isPingable(self):
+        command = "ping -c 1 -W 4 " + self.ip + " > /dev/null 2>&1"
+        response = os.system(command)
 
-def isPingable(self):
-    command = "ping -c 1 -W 4 " + self.ip + " > /dev/null 2>&1"
-    response = os.system(command)
+        if response == 0:
+            return True
+        else:
+            return False
 
-    if response == 0:
-        return True
-    else:
-        return False
-
-
-def printInfo(self):
-    print("ID: " + self.id + " NAME: " + self.name +
-          " MAC: " + self.mac + " IP: " + self.ip)
+    def printInfo(self):
+        print("ID: " + self.netcupServerName + " NAME: " + self.shortName +
+              " MAC: " + self.mac + " IP: " + self.ip)

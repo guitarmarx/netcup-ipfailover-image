@@ -31,7 +31,7 @@ logFormat = '%(asctime)s - %(levelname)s - %(message)s'
 # read failover server
 failoverServers = helper.getFailoverServers()
 for failoverServer in failoverServers:
-    failoverServer.printInfos()
+    failoverServer.printInfo()
 
 # create netcupAPI object
 netcupAPI = NetcupAPI(netcupAPIUrl, netcupUser, netcupPassword,
