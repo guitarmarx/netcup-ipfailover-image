@@ -12,7 +12,7 @@ ENV SMTP_SERVER=localhost \
 	NETCUP_PASSWORD="<NETCUP_PASSWORD>" \
 	NETCUP_API_URL="https://www.vservercontrolpanel.de:443/WSEndUser?wsdl" \
 	FAILOVER_IP="<FAILOVER_IP>" \
-	FAILOVER_NETMASK="<FAILOVER_MASK>" \
+	FAILOVER_NETMASK=32 \
 	TIME_BETWEEN_PINGS=60 \
 	SERVER_1="<server_spitzname>;<server_name>;<mac>;<ip>"
 
