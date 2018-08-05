@@ -74,7 +74,8 @@ while True:
 
             firstPingableServer = getFirstPingableServer()
             if netcupAPI.changeIPRouting(firstPingableServer, failoverIPNetmask):
-                helper.sendNotification(smtpServer, smtpPort, smtpUser, smtpPass, smtpSourceMail, smtpTargetMail, "hello"):
+                helper.sendNotification(
+                    smtpServer, smtpPort, smtpUser, smtpPass, smtpSourceMail, smtpTargetMail, "hello")
             else:
                 logger.error("Error in new Routing")
         else:
