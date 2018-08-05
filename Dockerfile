@@ -18,7 +18,7 @@ ENV SMTP_SERVER=localhost \
 
 RUN apk update && \
 	apk add iputils \
-	&& pip install --no-cache-dir requests
+	&& pip install --no-cache-dir requests ConfigParser
 
 
 COPY scripts/ /tmp/scripts/
