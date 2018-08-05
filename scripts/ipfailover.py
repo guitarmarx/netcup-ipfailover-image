@@ -25,14 +25,16 @@ messages = helper.getMessages("messages.ini")
 logFile = '/tmp/failover.log'
 logFormat = '%(asctime)s - %(levelname)s - %(message)s'
 
-logLevelArray = {"DEBUG": "10", "INFO": "20", "WARN": "30", "ERROR": "40"}
+logLevelArray = {"DEBUG": 10, "INFO": 20, "WARN": 30, "ERROR": 40}
 logLevel = logLevelArray[os.environ["LOG_LEVEL"]]
 
+# Init Logger
+logger = helper.initLogging(logFormat, logLevel, logFile)
+logger.info("FailoverIP monitoring is active ...")
 
 # read failover server
 failoverServers = helper.getFailoverServers()
-for failoverServer in failoverServers:
-    failoverServer.printInfo()
+logger.info("Configured failover servers: " + failoverServers)
 
 # create netcupAPI object
 netcupAPI = NetcupAPI(netcupAPIUrl, netcupUser, netcupPassword,
@@ -51,10 +53,6 @@ def getFirstPingableServer():
         if failoverServer.isPingable():
             return failoverServer
 
-
-# Init Logger
-logger = helper.initLogging(logFormat, logLevel, logFile)
-logger.info("FailoverIP monitoring is active ...")
 
 while True:
     if not helper.isFailoverIPPingable(failoverIP, timeBetweenPings):

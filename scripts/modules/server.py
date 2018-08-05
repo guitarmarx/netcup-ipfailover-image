@@ -22,7 +22,3 @@ class Server:
             return True
         else:
             return False
-
-    def printInfo(self):
-        print("ID: " + self.netcupServerName + " NAME: " + self.shortName +
-              " MAC: " + self.mac + " IP: " + self.ip)
