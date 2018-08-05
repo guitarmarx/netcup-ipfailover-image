@@ -25,7 +25,7 @@ failoverIPNetmask = os.environ["FAILOVER_NETMASK"]
 
 timeBetweenPings = os.environ["TIME_BETWEEN_PINGS"]
 messages = helper.getMessages("messages.ini")
-logFile = '/srv/failover.log'
+logFile = '/tmp/failover.log'
 logFormat = '%(asctime)s - %(levelname)s - %(message)s'
 
 # read failover server

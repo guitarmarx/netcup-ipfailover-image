@@ -1,4 +1,4 @@
 #!/bin/bash
 
 echo "Starting Failover script"
-python /srv/scripts/ipfailover.py
+python /tmp/scripts/ipfailover.py
