@@ -34,7 +34,6 @@ logger.info("FailoverIP monitoring is active ...")
 
 # read failover server
 failoverServers = helper.getFailoverServers()
-logger.info("Configured failover servers: " + failoverServers)
 
 # create netcupAPI object
 netcupAPI = NetcupAPI(netcupAPIUrl, netcupUser, netcupPassword,
