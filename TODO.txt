@@ -1,4 +1,0 @@
-- Auslesen der Server aus Environment                                       check
-- Anlegen der Server als Object --> Methoden dem Object zuordnen            check
-- Anlegen Mail Method                                                       check
-- Init netcupAPI

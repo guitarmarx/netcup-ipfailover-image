@@ -25,4 +25,4 @@ RUN  apt update \
 COPY scripts/ /tmp/scripts/
 RUN chmod +x /tmp/scripts/entrypoint.sh
 
-ENTRYPOINT ["/srv/scripts/entrypoint.sh"]
+ENTRYPOINT ["/tmp/scripts/entrypoint.sh"]
