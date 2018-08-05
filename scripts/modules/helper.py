@@ -2,8 +2,8 @@ import os
 import logging
 import smtplib
 import time
-from email.MIMEMultipart import MIMEMultipart
-from email.MIMEText import MIMEText
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 from .server import Server
 from ConfigParser import SafeConfigParser
 
