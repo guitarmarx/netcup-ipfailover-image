@@ -18,8 +18,6 @@ class NetcupAPI:
         self.failoverIPNetmask = failoverIPNetmask
 
     def hasServerFailoverIP(self, server):
-        # Template
-        #
         template_message = """<?xml version="1.0" encoding="UTF-8"?>
                             <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="http://enduser.service.web.vcp.netcup.de/">
                                     <SOAP-ENV:Body>
@@ -47,7 +45,6 @@ class NetcupAPI:
             return False
 
     def deleteFailoverIPRouting(self, server):
-        # Template
         template_message = """<?xml version="1.0" encoding="UTF-8"?>
                 <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="http://enduser.service.web.vcp.netcup.de/">
                     <SOAP-ENV:Body>
