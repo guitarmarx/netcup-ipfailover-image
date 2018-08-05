@@ -1,9 +1,8 @@
 import os
 import logging
-import smtplib
+
 import time
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
+
 from .server import Server
 import configparser
 
@@ -57,9 +56,9 @@ def isPingable(ip):
         return False
 
 
-def initLogging(logFormat, logFile):
+def initLogging(logFormat, logLevel,  logFile):
     logger = logging.getLogger()
-    logger.setLevel(logging.INFO)
+    logger.setLevel(logLevel)
     formatter = logging.Formatter(logFormat)
 
     # Init file logging
@@ -72,22 +71,3 @@ def initLogging(logFormat, logFile):
     handler2.setFormatter(formatter)
     logger.addHandler(handler2)
     return logger
-
-
-def sendNotification(smtpServer, smtpPort, smtpUser, smtpPass, smtpSourceMail, smtpTargetMail, mailBody):
-    # Message definition
-    msg = MIMEMultipart()
-    msg['Subject'] = 'Backend Info'
-    msg['From'] = smtpSourceMail
-    msg['To'] = smtpTargetMail
-    body = mailBody
-    msg.attach(MIMEText(body, 'plain'))
-
-    # Open Connection
-    server = smtplib.SMTP(smtpServer, smtpPort)
-    server.starttls()
-    server.login(smtpUser, smtpPass)
-
-    # Send Mail
-    server.sendmail(smtpSourceMail, [smtpTargetMail], msg.as_string())
-    server.quit()

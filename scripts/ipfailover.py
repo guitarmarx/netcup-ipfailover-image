@@ -1,12 +1,9 @@
 import logging
-import subprocess
 import os
-import requests
-import re
-import time
 from modules.netcupapi import NetcupAPI
 from modules import helper
 from modules.server import Server
+from modules.mailsender import Mailsender
 
 
 #####     PARAMETER     #####
@@ -28,6 +25,10 @@ messages = helper.getMessages("messages.ini")
 logFile = '/tmp/failover.log'
 logFormat = '%(asctime)s - %(levelname)s - %(message)s'
 
+logLevelArray = {"DEBUG": "10", "INFO": "20", "WARN": "30", "ERROR": "40"}
+logLevel = logLevelArray[os.environ["LOG_LEVEL"]]
+
+
 # read failover server
 failoverServers = helper.getFailoverServers()
 for failoverServer in failoverServers:
@@ -35,7 +36,7 @@ for failoverServer in failoverServers:
 
 # create netcupAPI object
 netcupAPI = NetcupAPI(netcupAPIUrl, netcupUser, netcupPassword,
-                      failoverIP, failoverIPNetmask)
+                      failoverIP, failoverIPNetmask, logger)
 
 
 def getCurrentIPFailoverServer():
@@ -51,31 +52,28 @@ def getFirstPingableServer():
             return failoverServer
 
 
-
-# ----------------MAIN----------------------------
-failoverErrorOccured = False
-
 # Init Logger
-logger = helper.initLogging(logFormat, logFile)
-logger.info("script started ...")
+logger = helper.initLogging(logFormat, logLevel, logFile)
+logger.info("FailoverIP monitoring is active ...")
 
 while True:
-
     if not helper.isFailoverIPPingable(failoverIP, timeBetweenPings):
-        logger.info('Starting failover...')
+        logger.info('FailoverIP unreachable, start failover ...')
 
         currentFailoverIPServer = getCurrentIPFailoverServer()
-        logger.info('Current failover server: ' + currentFailoverIPServer.name)
 
         # delete IP Routing
+        logger.info("delete FailoverIP from " +
+                    currentFailoverIPServer.shortName + " ... ")
         if netcupAPI.deleteFailoverIPRouting(currentFailoverIPServer):
-            logger.info('Deleting IP routing for ' + failoverIP +
-                        ' successful, setting new IP routing')
+            logger.info("FailoverIP deleted!")
 
             firstPingableServer = getFirstPingableServer()
+            logger.info("route new FailoverIP to  " +
+                        currentFailoverIPServer.shortName + " ... ")
             if netcupAPI.setFailoverIP(firstPingableServer):
-                helper.sendNotification(
-                    smtpServer, smtpPort, smtpUser, smtpPassword, smtpSourceMail, smtpTargetMail, "hello")
+                Mailsender.sendNotification('subject', 'body')
+
             else:
                 logger.error("Error in new Routing")
         else:

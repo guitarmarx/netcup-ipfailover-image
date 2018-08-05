@@ -14,7 +14,9 @@ ENV SMTP_SERVER=localhost \
 	FAILOVER_IP="<FAILOVER_IP>" \
 	FAILOVER_NETMASK=32 \
 	TIME_BETWEEN_PINGS=60 \
-	SERVER_1="<server_spitzname>;<server_name>;<mac>;<ip>"
+	SERVER_1="<server_spitzname>;<server_name>;<mac>;<ip>" \
+	LOG_LEVEL=INFO
+
 
 RUN apk update && \
 	apk add iputils \
