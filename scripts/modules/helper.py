@@ -5,7 +5,7 @@ import time
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from .server import Server
-import ConfigParser
+import configparser
 
 
 def getFailoverServers():
