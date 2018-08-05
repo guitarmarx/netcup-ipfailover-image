@@ -13,7 +13,7 @@ from modules.server import Server
 smtpServer = os.environ["SMTP_SERVER"]
 smtpPort = os.environ["SMTP_PORT"]
 smtpUser = os.environ["SMTP_USER"]
-smtpPass = os.environ["SMTP_PASS"]
+smtpPassword = os.environ["SMTP_PASSWORD"]
 smtpSourceMail = os.environ["SMTP_SOURCE_MAIL"]
 smtpTargetMail = os.environ["SMTP_TARGET_MAIL"]
 
@@ -75,7 +75,7 @@ while True:
             firstPingableServer = getFirstPingableServer()
             if netcupAPI.changeIPRouting(firstPingableServer, failoverIPNetmask):
                 helper.sendNotification(
-                    smtpServer, smtpPort, smtpUser, smtpPass, smtpSourceMail, smtpTargetMail, "hello")
+                    smtpServer, smtpPort, smtpUser, smtpPassword, smtpSourceMail, smtpTargetMail, "hello")
             else:
                 logger.error("Error in new Routing")
         else:
