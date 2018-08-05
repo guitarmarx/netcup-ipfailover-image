@@ -62,51 +62,20 @@ logger.info("script started ...")
 while True:
 
     if not helper.isFailoverIPPingable(failoverIP, timeBetweenPings):
-        # Start Failover
-        # get server with failoverIP
         logger.info('Starting failover...')
 
         currentFailoverIPServer = getCurrentIPFailoverServer()
         logger.info('Current failover server: ' + currentFailoverIPServer.name)
 
         # delete IP Routing
-        if netcupAPI.changeIPRouting(currentFailoverIPServer):
+        if netcupAPI.deleteFailoverIPRouting(currentFailoverIPServer):
             logger.info('Deleting IP routing for ' + failoverIP +
                         ' successful, setting new IP routing')
 
-            # get first pingable server
             firstPingableServer = getFirstPingableServer()
-            logger.info('Switching to: ' + firstPingableServer.shortName)
-
-            # request change IP routing for current leader
-            if (netcupAPI.changeIPRouting(firstPingableServer, netmask=failoverIPNetmask)):
-                # set IP routing successful
-                helper.sendNotification(body_setting_successful,
-                                        pingableServer['id'].iloc[0])
-                logger.info('setting up new IP routing for ' +
-                            failoverIP + ' was successful')
-                FIRST_PING_FAILED = False
+            if netcupAPI.changeIPRouting(firstPingableServer, failoverIPNetmask):
+                helper.sendNotification(smtpServer, smtpPort, smtpUser, smtpPass, smtpSourceMail, smtpTargetMail, "hello"):
             else:
-                # set IP routing failed
-                if not FAILOVER_ERROR_OCCURED == 'true':
-                    # set new IP routing failed at first try
-                    logger.error('setting new IP routing for ' + failoverIP +
-                                 ' failed at first try, notification mail is sent')
-                    sendNotification(body_setting_failed, return_set)
-                    FAILOVER_ERROR_OCCURED = 'true'
-                else:
-                    # set new IP routing failed again
-                    logger.error(
-                        'another attempt for setting up new IP routing ' + failoverIP + ' failed')
+                logger.error("Error in new Routing")
         else:
-            # delete IP routing failed
-            if not FAILOVER_ERROR_OCCURED == 'true':
-                # delete IP routing failed at first try
-                FAILOVER_ERROR_OCCURED = 'true'
-                logger.error('setting new IP routing for ' + failoverIP +
-                             ' failed at first try, notification mail is sent')
-                sendNotification(body_deleting_failed, return_del)
-            else:
-                # delete IP routing failed again
-                logger.error(
-                    'another attemmpt for deleting IP routing for ' + failoverIP + ' failed')
+            logger.error("Error in deleting IP Routing")

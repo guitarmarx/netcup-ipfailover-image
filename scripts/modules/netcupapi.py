@@ -46,7 +46,43 @@ class NetcupAPI:
         else:
             return False
 
-    def changeIPRouting(self, server, netmask='00:00:00:00:00:00'):
+    def deleteFailoverIPRouting(self, server):
+        # Template
+        template_message = """<?xml version="1.0" encoding="UTF-8"?>
+                <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="http://enduser.service.web.vcp.netcup.de/">
+                    <SOAP-ENV:Body>
+                        <ns1:changeIPRouting>
+                            <loginName>%s</loginName>
+                            <password>%s</password>
+                                <routedIP>%s</routedIP>
+                                <routedMask>%s</routedMask>
+                                <destinationVserverName>%s</destinationVserverName>
+                                <destinationInterfaceMAC>00:00:00:00:00:00</destinationInterfaceMAC>
+                            </ns1:changeIPRouting>
+                    </SOAP-ENV:Body>
+                </SOAP-ENV:Envelope>"""
+        # Create Message
+        message = template_message % (
+            self.netcupUser, self.netcupPassword, self.failoverIP, self.failoverIPNetmask,  server.netcupServerName)
+
+        # header definition
+        headers = {"Content-Type":  "text/xml ; charet=UTF-8",
+                   "Content-Length": str(len(message)), "SOAPAction": ""}
+
+        # Send SOAP Post
+        response = requests.post(
+            self.netcupAPIUrl, data=message, headers=headers)
+        if response.status_code == 200:
+            #self.logger.info("SOAP: changeIPRouting Returncode 200.")
+            status = re.search(r'<return>(.*?)<\/return>', response.content)
+            if status:
+                return status.group(1)  # true
+            else:
+                return response.content
+        else:
+            return response.content
+
+    def setFailoverIP(self, server):
         # Template
         template_message = """<?xml version="1.0" encoding="UTF-8"?>
                 <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="http://enduser.service.web.vcp.netcup.de/">
@@ -63,7 +99,7 @@ class NetcupAPI:
                 </SOAP-ENV:Envelope>"""
         # Create Message
         message = template_message % (
-            self.netcupUser, self.netcupPassword, server.ip, netmask, server.netcupServerName, server.mac)
+            self.netcupUser, self.netcupPassword, self.failoverIP, self.failoverIPNetmask, server.netcupServerName, server.mac)
 
         # header definition
         headers = {"Content-Type":  "text/xml ; charet=UTF-8",
