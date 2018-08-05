@@ -5,7 +5,7 @@ import time
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from .server import Server
-from ConfigParser import SafeConfigParser
+import ConfigParser
 
 
 def getFailoverServers():
@@ -42,9 +42,9 @@ def isFailoverIPPingable(failoverIP, timeBetweenPings):
 
 
 def getMessages(file):
-    parser = SafeConfigParser()
-    parser.read('file')
-    return parser
+    config = configparser.ConfigParser()
+    config.read(file)
+    return config
 
 
 def isPingable(ip):
