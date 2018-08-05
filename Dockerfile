@@ -16,9 +16,8 @@ ENV SMTP_SERVER=localhost \
 	TIME_BETWEEN_PINGS=60 \
 	SERVER_1="<server_spitzname>;<server_name>;<mac>;<ip>"
 
-RUN  apt update \
-	&& apt install -y iputils-ping \
-	&& rm -rf /var/lib/apt/lists/* \
+RUN apk update && \
+	apk add iputils \
 	&& pip install --no-cache-dir requests
 
 
