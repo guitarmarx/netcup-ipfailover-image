@@ -13,7 +13,7 @@ class Mailsender:
     smtpTargetMail = ""
     logger = ""
 
-    def __init__(smtpServer, smtpPort, smtpUser, smtpPassword, smtpSourceMail, smtpTargetMail, logger):
+    def __init__(self, smtpServer, smtpPort, smtpUser, smtpPassword, smtpSourceMail, smtpTargetMail, logger):
         self.smtpServer = smtpServer
         self.smtpPort = smtpPort
         self.smtpPassword = smtpPassword
@@ -21,20 +21,24 @@ class Mailsender:
         self.smtpTargetMail = smtpTargetMail
         self.logger = logger
 
-    def sendNotification(subject, body):
+    def sendNotification(self, subject, body):
         # Message definition
         msg = MIMEMultipart()
         msg['Subject'] = subject
-        msg['From'] = smtpSourceMail
-        msg['To'] = smtpTargetMail
+        msg['From'] = self.smtpSourceMail
+        msg['To'] = self.smtpTargetMail
         msg.attach(MIMEText(body, 'plain'))
 
         # Open Connection
-        server = smtplib.SMTP(smtpServer, smtpPort)
+        server = smtplib.SMTP(self.smtpServer, self.smtpPort)
         server.starttls()
-        server.login(smtpUser, smtpPass)
+        server.login(self.smtpUser, self.smtpPassword)
 
         # Send Mail
-        logger.debug('sending message to ' + self.smtpSourceMail)
-        server.sendmail(smtpSourceMail, [smtpTargetMail], msg.as_string())
+        self.logger.debug('sending message to ' + self.smtpSourceMail)
+        server.sendmail(self.smtpSourceMail, [
+                        self.smtpTargetMail], msg.as_string())
         server.quit()
+
+    def buildMailBody(self, logMessages):
+        return None

@@ -25,7 +25,7 @@ def getFailoverServers():
     return failoverServers
 
 
-def isFailoverIPPingable(failoverIP, timeBetweenPings):
+def isFailoverIPReachable(failoverIP, timeBetweenPings):
     isFailoverIPPingable = True
 
     if not isPingable(failoverIP):
