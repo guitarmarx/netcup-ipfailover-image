@@ -2,6 +2,7 @@ import logging
 import os
 from modules.netcupapi import NetcupAPI
 from modules import helper
+from modules.slack import Slack
 from modules.vserver import VServer
 import sys
 import time
@@ -92,8 +93,9 @@ while True:
                     logger.info("Set new FailoverIP routing to " +
                                 firstPingableServer.nickname + " ... ")
                     if netcupAPI.setFailoverIPRouting(firstPingableServer):
-                        helper.sendSlackMessage(
-                            slackWebhookURL, 'Failover successfull from ' + currentFailoverIPServer.nickname + ' to ' + firstPingableServer.nickname)
+                        slack = Slack(slackWebhookURL)
+                        slack.sendMessage(
+                            'Failover successfull from ' + currentFailoverIPServer.nickname + ' to ' + firstPingableServer.nickname)
 
                     else:
                         logger.error("Error in new Routing ... Restart ...")

@@ -11,11 +11,6 @@ def getFirstPingableServer(failoverServers):
             return failoverServer
 
 
-def sendSlackMessage(slackWebhookURL, message):
-    message = '{"text" : "' + message + '"}'
-    requests.post(slackWebhookURL, data=message)
-
-
 def initLogging(logFormat, logLevel,  logFile):
     logger = logging.getLogger()
     logger.setLevel(logLevel)
