@@ -81,8 +81,8 @@ class NetcupAPI:
 
     def setFailoverIPRouting(self, vServer):
         try:
-            message = self.client.service.changeIPRouting(
-                loginName=self.netcupUser, password=self.netcupPassword, destinationvserverName=vServer.netcupServerName, routedIP=self.failoverIP, routedMask=self.failoverIPNetmask, destinationInterfaceMAC=vServer.macAddress)
+            message = self.client.service.changeIPRouting(loginName=self.netcupUser, password=self.netcupPassword, destinationVserverName=vServer.netcupServerName,
+                                                          routedIP=self.failoverIP, routedMask=self.failoverIPNetmask, destinationInterfaceMAC=vServer.macAddress)
             self.logger.debug(message)
             return True
         except Exception:
@@ -92,7 +92,7 @@ class NetcupAPI:
     def deleteFailoverIPRouting(self, vServer):
         try:
             message = self.client.service.changeIPRouting(
-                loginName=self.netcupUser, password=self.netcupPassword, destinationvserverName=vServer.netcupServerName, routedIP=self.failoverIP, routedMask=self.failoverIPNetmask, destinationInterfaceMAC='00:00:00:00:00:00')
+                loginName=self.netcupUser, password=self.netcupPassword, destinationVserverName=vServer.netcupServerName, routedIP=self.failoverIP, routedMask=self.failoverIPNetmask, destinationInterfaceMAC='00:00:00:00:00:00')
             self.logger.debug(message)
             return True
         except Exception:
