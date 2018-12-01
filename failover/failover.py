@@ -84,13 +84,13 @@ while True:
             if isDryRun == 'FALSE':
                 # server is unreachable --> Start Failover
                 # delete IP Routing
-                logger.info("delete FailoverIP from " +
+                logger.info("Delete FailoverIP from " +
                             currentFailoverIPServer.nickname + " ... ")
                 if netcupAPI.deleteFailoverIPRouting(currentFailoverIPServer):
                     logger.info("FailoverIP routing deleted...")
 
-                    logger.info("route new FailoverIP to " +
-                                currentFailoverIPServer.nickname + " ... ")
+                    logger.info("Set new FailoverIP routing to " +
+                                firstPingableServer.nickname + " ... ")
                     if netcupAPI.setFailoverIPRouting(firstPingableServer):
                         helper.sendSlackMessage(
                             slackWebhookURL, 'Failover successfull from ' + currentFailoverIPServer.nickname + ' to ' + firstPingableServer.nickname)
@@ -101,8 +101,9 @@ while True:
                     logger.error("Error in deleting IP Routing ... Restart.")
             else:
                 logger.info(
-                    "dry run is active ... failover won't be executed ...")
+                    "Dry run is active, no action ...")
         else:
-            logger.error("netcup problem, no action")
+            logger.error(
+                "Seem to be a netcup problem, server is reachable or netcup API is unreachable, no action ....")
     # wait 10 sec
     time.sleep(10)

@@ -12,6 +12,7 @@ def getFirstPingableServer(failoverServers):
 
 
 def sendSlackMessage(slackWebhookURL, message):
+    message = '{"text" : "' + message + '"}'
     requests.post(slackWebhookURL, data=message)
 
 
