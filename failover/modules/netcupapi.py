@@ -147,19 +147,23 @@ class NetcupAPI:
     def getCurrentIPFailoverServer(self, failoverServers):
         for failoverServer in failoverServers:
             # check if server has failover ip
-            if self.hasVServerFailoverIP(failoverServer):
+            if self.hasVServerFailoverIP(failoverServer.netcupServerName):
                 return failoverServer
+        return None
 
     def isFailoverIPPingable(self, timeBetweenPings):
         isFailoverIPPingable = True
 
         if not self.isPingable(self.failoverIP):
             # start wait time
+            self.logger.warn("first ping to failoverIP failed, wait " +
+                             str(timeBetweenPings) + " seconds ...")
             time.sleep(timeBetweenPings)
 
             # Second Try: ping failover IP
             if not self.isPingable(self.failoverIP):
                 isFailoverIPPingable = False
+                self.logger.warn("second ping to failoverIP failed ...")
         return isFailoverIPPingable
 
     def isPingable(self, ip):

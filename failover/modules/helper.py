@@ -34,7 +34,7 @@ def initLogging(logFormat, logLevel,  logFile):
 
 def checkParameterAvailable():
     parameterList = ['NETCUP_USER', 'NETCUP_PASSWORD',
-                     'FAILOVER_IP', 'FAILOVER_SERVER_MAC_1', 'FAILOVER_SERVER_1']
+                     'FAILOVER_IP', 'FAILOVER_SERVER_MAC_1', 'FAILOVER_SERVER_1', 'NETCUP_API_URL', 'FAILOVER_NETMASK', 'SLACK_WEBHOOK_URL', 'TIME_BETWEEN_PINGS']
     for parameter in parameterList:
         try:
             os.environ[parameter]
