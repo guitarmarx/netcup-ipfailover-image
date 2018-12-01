@@ -19,4 +19,4 @@ RUN apt update \
 
 COPY failover/ /srv/failover/
 
-ENTRYPOINT ["python","/srv/scripts/failover.py"]
+ENTRYPOINT ["python","/srv/failover/failover.py"]
