@@ -85,7 +85,8 @@ class NetcupAPI:
                 loginName=self.netcupUser, password=self.netcupPassword, destinationvserverName=vServer.netcupServerName, routedIP=self.failoverIP, routedMask=self.failoverIPNetmask, destinationInterfaceMAC=vServer.macAddress)
             self.logger.debug(message)
             return True
-        except:
+        except Exception:
+            self.logger.debug(sys.exc_info()[0])
             return False
 
     def deleteFailoverIPRouting(self, vServer):
@@ -94,7 +95,8 @@ class NetcupAPI:
                 loginName=self.netcupUser, password=self.netcupPassword, destinationvserverName=vServer.netcupServerName, routedIP=self.failoverIP, routedMask=self.failoverIPNetmask, destinationInterfaceMAC='00:00:00:00:00:00')
             self.logger.debug(message)
             return True
-        except:
+        except Exception:
+            self.logger.debug(sys.exc_info()[0])
             return False
 
     def getVServerInformation(self, vServerName):

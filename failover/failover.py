@@ -4,6 +4,7 @@ from modules.netcupapi import NetcupAPI
 from modules import helper
 from modules.vserver import VServer
 import sys
+import time
 
 # init logging
 logFile = '/var/log/failover.log'
@@ -102,3 +103,5 @@ while True:
                     "dry run is active ... failover won't be executed ...")
         else:
             logger.error("netcup problem, no action")
+    # wait 10 sec
+    time.sleep(10)
