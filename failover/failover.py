@@ -76,7 +76,7 @@ while True:
             logger.info('FailoverIP assigned, continue monitoring...')
             continue
         else:
-            logger.info('current failover server is ' +
+            logger.info('Current failover server is ' +
                         currentFailoverIPServer.nickname)
 
             # ping current failover server
