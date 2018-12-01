@@ -90,7 +90,7 @@ while True:
                     logger.info("FailoverIP deleted!")
 
                     logger.info("route new FailoverIP to  " +
-                                currentFailoverIPServer.shortName + " ... ")
+                                currentFailoverIPServer.nickname + " ... ")
                     if netcupAPI.setFailoverIPRouting(firstPingableServer):
                         helper.sendSlackMessage(
                             slackWebhookURL, 'Failover successfull from ' + currentFailoverIPServer.nickname + ' to ' + firstPingableServer)
