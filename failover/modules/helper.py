@@ -1,4 +1,3 @@
-from vserver import VServer
 import os
 import logging
 import time
