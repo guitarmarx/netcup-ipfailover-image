@@ -17,6 +17,6 @@ RUN apt update \
 	&& apt install -y iputils-ping \
 	&& pip install --no-cache-dir zeep
 
-COPY scripts/ /srv/scripts/
+COPY failover/ /srv/failover/
 
 ENTRYPOINT ["python","/srv/scripts/failover.py"]
