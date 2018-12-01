@@ -38,6 +38,7 @@ netcupPassword = os.environ["NETCUP_PASSWORD"]
 failoverIP = os.environ["FAILOVER_IP"]
 failoverIPNetmask = os.environ["FAILOVER_NETMASK"]
 isDryRun = os.environ["DRY_RUN"]
+logger.debug(isDryRun)
 
 slackWebhookURL = os.environ['SLACK_WEBHOOK_URL']
 
@@ -95,11 +96,11 @@ while True:
                             slackWebhookURL, 'Failover successfull from ' + currentFailoverIPServer.nickname + ' to ' + firstPingableServer)
 
                     else:
-                        logger.error("Error in new Routing")
+                        logger.error("Error in new Routing ... Restart ...")
                 else:
-                    logger.error("Error in deleting IP Routing")
+                    logger.error("Error in deleting IP Routing ... Restart.")
             else:
-                logger.error(
+                logger.info(
                     "dry run is active ... failover won't be executed ...")
         else:
             logger.error("netcup problem, no action")
