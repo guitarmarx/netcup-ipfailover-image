@@ -72,7 +72,7 @@ while True:
             logger.warn('FailoverIP is not assigned. Assign to ' +
                         firstPingableServer.nickname)
             netcupAPI.setFailoverIPRouting(firstPingableServer)
-            logger.info('FailoverIP assigned, restart monitoring...')
+            logger.info('FailoverIP assigned, continue monitoring...')
             continue
         else:
             logger.info('current failover server is ' +
@@ -87,13 +87,13 @@ while True:
                 logger.info("delete FailoverIP from " +
                             currentFailoverIPServer.nickname + " ... ")
                 if netcupAPI.deleteFailoverIPRouting(currentFailoverIPServer):
-                    logger.info("FailoverIP deleted!")
+                    logger.info("FailoverIP routing deleted...")
 
-                    logger.info("route new FailoverIP to  " +
+                    logger.info("route new FailoverIP to " +
                                 currentFailoverIPServer.nickname + " ... ")
                     if netcupAPI.setFailoverIPRouting(firstPingableServer):
                         helper.sendSlackMessage(
-                            slackWebhookURL, 'Failover successfull from ' + currentFailoverIPServer.nickname + ' to ' + firstPingableServer)
+                            slackWebhookURL, 'Failover successfull from ' + currentFailoverIPServer.nickname + ' to ' + firstPingableServer.nickname)
 
                     else:
                         logger.error("Error in new Routing ... Restart ...")
