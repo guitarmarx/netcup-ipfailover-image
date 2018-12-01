@@ -58,6 +58,7 @@ while True:
 
         # get first pingable server
         firstPingableServer = helper.getFirstPingableServer(failoverServers)
+        logger.info('First reachable server: ' + firstPingableServer.nickname)
 
         # get current failover server
         currentFailoverIPServer = netcupAPI.getCurrentIPFailoverServer(
@@ -65,7 +66,11 @@ while True:
 
         if currentFailoverIPServer is None:
             #FailoverIP is not assigned
+            logger.warn('FailoverIP is not assigned. Assign to ' +
+                        firstPingableServer.nickname)
             netcupAPI.setFailoverIPRouting(firstPingableServer)
+            logger.info('FailoverIP assigned, restart monitoring...')
+            continue
 
             # ping current failover server
         if not netcupAPI.isPingable(currentFailoverIPServer.ipAddress) or netcupAPI.isNetcupAPIReachable():
