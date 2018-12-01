@@ -93,7 +93,7 @@ while True:
                     logger.info("Set new FailoverIP routing to " +
                                 firstPingableServer.nickname + " ... ")
                     if netcupAPI.setFailoverIPRouting(firstPingableServer):
-                        slack = Slack(slackWebhookURL)
+                        slack = Slack(slackWebhookURL, logger)
                         slack.sendMessage(
                             'Failover successfull from ' + currentFailoverIPServer.nickname + ' to ' + firstPingableServer.nickname)
 
