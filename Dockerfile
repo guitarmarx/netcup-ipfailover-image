@@ -11,7 +11,8 @@ ENV NETCUP_API_URL="https://www.vservercontrolpanel.de:443/WSEndUser?wsdl" \
 	FAILOVER_SERVER_1="" \
 	FAILOVER_SERVER_MAC_1=""\
 	SLACK_WEBHOOK_URL=https://hooks.slack.com/services/<TOKEN> \
-	DRY_RUN=FALSE
+	DRY_RUN=FALSE \
+	LOG_LEVEL=INFO
 
 RUN apt update \
 	&& apt install -y iputils-ping \

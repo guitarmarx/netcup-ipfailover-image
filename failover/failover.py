@@ -9,7 +9,7 @@ import time
 # init logging
 logFile = '/var/log/failover.log'
 logFormat = '%(asctime)s - %(levelname)s - %(message)s'
-logLevel = 'DEBUG'
+logLevel = os.environ["LOG_LEVEL"]
 
 # Init Logger
 logger = helper.initLogging(logFormat, logLevel, logFile)
@@ -81,7 +81,7 @@ while True:
             # ping current failover server
         if not netcupAPI.isPingable(currentFailoverIPServer.ipAddress) or netcupAPI.isNetcupAPIReachable():
 
-            if 'FALSE' not in isDryRun:
+            if 'FALSE' == in isDryRun:
                 # server is unreachable --> Start Failover
                 # delete IP Routing
                 logger.info("delete FailoverIP from " +

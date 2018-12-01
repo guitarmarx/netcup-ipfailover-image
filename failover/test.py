@@ -1,4 +1,4 @@
-import socket
+""" import socket
 from modules.netcupapi import NetcupAPI
 from modules.vserver import VServer
 from modules import helper
@@ -23,4 +23,11 @@ vServerIP = netcupAPI.getVServerIP(vServerName, '188.68.44.180')
 vServer = VServer(vServerName, vServerNickname,
                   vServerMac, vServerIP)
 
-netcupAPI.setFailoverIPRouting(vServer)
+netcupAPI.setFailoverIPRouting(vServer) """
+
+status = 'FALSE'
+
+if 'FALSE' in status:
+    print("run")
+else:
+    print("norun")
