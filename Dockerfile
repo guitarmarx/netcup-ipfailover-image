@@ -14,7 +14,7 @@ ENV NETCUP_API_URL = 'https://www.vservercontrolpanel.de:443/WSEndUser?wsdl' \
 	DRY_RUN=FALSE
 
 RUN apk update \
-	&& apk add iputils \
+	&& apk add iputils libxml2 libxslt \
 	&& pip install --no-cache-dir zeep
 
 COPY scripts/ /srv/scripts/
