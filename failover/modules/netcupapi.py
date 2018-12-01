@@ -81,16 +81,18 @@ class NetcupAPI:
 
     def setFailoverIPRouting(self, vServer):
         try:
-            self.client.service.changeIPRouting(
+            message = self.client.service.changeIPRouting(
                 loginName=self.netcupUser, password=self.netcupPassword, destinationvserverName=vServer.netcupServerName, routedIP=self.failoverIP, routedMask=self.failoverIPNetmask, destinationInterfaceMAC=vServer.macAddress)
+            logger.debug(message)
             return True
         except:
             return False
 
     def deleteFailoverIPRouting(self, vServer):
         try:
-            self.client.service.changeIPRouting(
+            message = self.client.service.changeIPRouting(
                 loginName=self.netcupUser, password=self.netcupPassword, destinationvserverName=vServer.netcupServerName, routedIP=self.failoverIP, routedMask=self.failoverIPNetmask, destinationInterfaceMAC='00:00:00:00:00:00')
+            logger.debug(message)
             return True
         except:
             return False
@@ -156,14 +158,16 @@ class NetcupAPI:
 
         if not self.isPingable(self.failoverIP):
             # start wait time
-            self.logger.warn("first ping to failoverIP failed, wait " +
+            self.logger.warn("First ping to failoverIP failed, wait " +
                              str(timeBetweenPings) + " seconds ...")
             time.sleep(timeBetweenPings)
 
             # Second Try: ping failover IP
             if not self.isPingable(self.failoverIP):
                 isFailoverIPPingable = False
-                self.logger.warn("second ping to failoverIP failed ...")
+                self.logger.warn("Second ping to failoverIP failed ...")
+            else:
+                self.logger.info("FailoverIP back to normal ...")
         return isFailoverIPPingable
 
     def isPingable(self, ip):

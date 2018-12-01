@@ -8,7 +8,7 @@ import sys
 # init logging
 logFile = '/var/log/failover.log'
 logFormat = '%(asctime)s - %(levelname)s - %(message)s'
-logLevel = 'INFO'
+logLevel = 'DEBUG'
 
 # Init Logger
 logger = helper.initLogging(logFormat, logLevel, logFile)
@@ -58,7 +58,8 @@ while True:
 
         # get first pingable server
         firstPingableServer = helper.getFirstPingableServer(failoverServers)
-        logger.info('First reachable server: ' + firstPingableServer.nickname)
+        logger.info('First reachable server is ' +
+                    firstPingableServer.nickname)
 
         # get current failover server
         currentFailoverIPServer = netcupAPI.getCurrentIPFailoverServer(
@@ -71,6 +72,9 @@ while True:
             netcupAPI.setFailoverIPRouting(firstPingableServer)
             logger.info('FailoverIP assigned, restart monitoring...')
             continue
+        else:
+            logger.info('current failover server is ' +
+                        currentFailoverIPServer.nickname)
 
             # ping current failover server
         if not netcupAPI.isPingable(currentFailoverIPServer.ipAddress) or netcupAPI.isNetcupAPIReachable():
