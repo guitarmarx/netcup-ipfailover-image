@@ -1,4 +1,4 @@
-FROM python:3-alpine3.7
+FROM python:3.6-slim
 
 LABEL maintainer="meteorIT GbR Marcus Kastner"
 
@@ -13,8 +13,8 @@ ENV NETCUP_API_URL = 'https://www.vservercontrolpanel.de:443/WSEndUser?wsdl' \
 	SLACK_WEBHOOK_URL=https://hooks.slack.com/services/<TOKEN> \
 	DRY_RUN=FALSE
 
-RUN apk update \
-	&& apk add iputils libxml2 libxslt \
+RUN apt update \
+	&& apt install -y iputils-ping \
 	&& pip install --no-cache-dir zeep
 
 COPY scripts/ /srv/scripts/
