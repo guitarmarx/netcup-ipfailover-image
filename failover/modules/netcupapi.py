@@ -83,7 +83,7 @@ class NetcupAPI:
         try:
             message = self.client.service.changeIPRouting(
                 loginName=self.netcupUser, password=self.netcupPassword, destinationvserverName=vServer.netcupServerName, routedIP=self.failoverIP, routedMask=self.failoverIPNetmask, destinationInterfaceMAC=vServer.macAddress)
-            logger.debug(message)
+            self.logger.debug(message)
             return True
         except:
             return False
@@ -92,7 +92,7 @@ class NetcupAPI:
         try:
             message = self.client.service.changeIPRouting(
                 loginName=self.netcupUser, password=self.netcupPassword, destinationvserverName=vServer.netcupServerName, routedIP=self.failoverIP, routedMask=self.failoverIPNetmask, destinationInterfaceMAC='00:00:00:00:00:00')
-            logger.debug(message)
+            self.logger.debug(message)
             return True
         except:
             return False
