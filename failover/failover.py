@@ -81,7 +81,7 @@ while True:
             # ping current failover server
         if not netcupAPI.isPingable(currentFailoverIPServer.ipAddress) or netcupAPI.isNetcupAPIReachable():
 
-            if 'FALSE' == in isDryRun:
+            if isDryRun == 'FALSE':
                 # server is unreachable --> Start Failover
                 # delete IP Routing
                 logger.info("delete FailoverIP from " +
