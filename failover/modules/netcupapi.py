@@ -118,6 +118,11 @@ class NetcupAPI:
             print(ipAddress)
     """
 
+    def getFirstPingableServer(self, failoverServers):
+        for failoverServer in failoverServers:
+            if failoverServer.isPingable():
+                return failoverServer
+
     def createFailoverServerObject(self, vServerName, vServerMac):
         vServerName = vServerName
         vServerMac = vServerMac

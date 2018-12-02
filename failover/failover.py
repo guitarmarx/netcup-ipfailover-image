@@ -20,11 +20,8 @@ logger = helper.initLogging(logFormat, logLevel, logFile)
 ###################################
 if not helper.checkParameterAvailable():
     sys.exit(1)
-elif not (helper.checkFailoverIP(os.environ['FAILOVER_IP'])):
-    logger.error('Missing parameter FAILOVER_IP...Abort')
-    sys.exit(1)
-elif not helper.checkNetcupUserLogin():
-    logger.error('Missing parameter NETCUP_USER or NETCUP_PASSWORD...Abort')
+elif not (helper.checkIPFormat(os.environ['FAILOVER_IP'])):
+    logger.error('Wrong format for parameter FAILOVER_IP...Abort')
     sys.exit(1)
 elif not helper.checkFailoverServers():
     logger.error(
@@ -42,7 +39,6 @@ isDryRun = os.environ["DRY_RUN"]
 logger.debug(isDryRun)
 
 slackWebhookURL = os.environ['SLACK_WEBHOOK_URL']
-
 timeBetweenPings = int(os.environ["TIME_BETWEEN_PINGS"])
 
 # create netcupAPI object
@@ -54,58 +50,69 @@ failoverServers = netcupAPI.getAllFailoverServers()
 
 logger.info("FailoverIP monitoring is active ...")
 while True:
-    if not netcupAPI.isFailoverIPPingable(timeBetweenPings):
 
-        # failover ip is unreachable
-        logger.warn('FailoverIP unreachable, check server ...')
+    # failoverIP is reachable --> no action
+    if netcupAPI.isFailoverIPPingable(timeBetweenPings):
+        # wait 10 sec
+        time.sleep(10)
+        continue
 
-        # get first pingable server
-        firstPingableServer = helper.getFirstPingableServer(failoverServers)
-        logger.info('First reachable server is ' +
+    # failover ip is unreachable
+    logger.warn('FailoverIP unreachable, check server ...')
+
+    # get first pingable server
+    firstPingableServer = netcupAPI.getFirstPingableServer(failoverServers)
+    logger.info('First reachable server is ' +
+                firstPingableServer.nickname)
+
+    # get current failover server
+    currentFailoverIPServer = netcupAPI.getCurrentIPFailoverServer(
+        failoverServers)
+
+    if currentFailoverIPServer is None:
+        #FailoverIP is not assigned
+        logger.warn('FailoverIP is not assigned. Assign to ' +
                     firstPingableServer.nickname)
+        netcupAPI.setFailoverIPRouting(firstPingableServer)
+        logger.info('FailoverIP assigned, continue monitoring...')
+        time.sleep(10)
+        continue
+    else:
+        logger.info('Current failover server is ' +
+                    currentFailoverIPServer.nickname)
 
-        # get current failover server
-        currentFailoverIPServer = netcupAPI.getCurrentIPFailoverServer(
-            failoverServers)
+    if netcupAPI.isPingable(currentFailoverIPServer.ipAddress):
+        # current assigned failoverIP server is reachable --> no action (netcup infrastcuture problem)
+        logger.info(
+            'Current failover server is reachable, failoverIP will not switched ...')
+        continue
 
-        if currentFailoverIPServer is None:
-            #FailoverIP is not assigned
-            logger.warn('FailoverIP is not assigned. Assign to ' +
-                        firstPingableServer.nickname)
-            netcupAPI.setFailoverIPRouting(firstPingableServer)
-            logger.info('FailoverIP assigned, continue monitoring...')
-            continue
+    if not netcupAPI.isNetcupAPIReachable():
+        # current assigned failoverIP server is reachable --> no action (netcup infrastcuture problem)
+        logger.info(
+            'Netcup SCP API is unreachable, failoverIP cannot be swiched ... ')
+        continue
+
+    if isDryRun != 'FALSE':
+        # dry run is active
+        logger.info('Dry Run is active, no action ...')
+        continue
+
+
+#######    FAILOVER    #######
+    # delete IP Routing
+    logger.info("Delete FailoverIP from " +
+                currentFailoverIPServer.nickname + " ... ")
+    if netcupAPI.deleteFailoverIPRouting(currentFailoverIPServer):
+        logger.info("FailoverIP routing deleted...")
+        logger.info("Set new FailoverIP routing to " +
+                    firstPingableServer.nickname + " ... ")
+        if netcupAPI.setFailoverIPRouting(firstPingableServer):
+            slack = Slack(slackWebhookURL, logger)
+            slack.sendMessage(
+                'Failover successfull from ' + currentFailoverIPServer.nickname + ' to ' + firstPingableServer.nickname)
         else:
-            logger.info('Current failover server is ' +
-                        currentFailoverIPServer.nickname)
-
-            # ping current failover server
-        if not netcupAPI.isPingable(currentFailoverIPServer.ipAddress) or netcupAPI.isNetcupAPIReachable():
-
-            if isDryRun == 'FALSE':
-                # server is unreachable --> Start Failover
-                # delete IP Routing
-                logger.info("Delete FailoverIP from " +
-                            currentFailoverIPServer.nickname + " ... ")
-                if netcupAPI.deleteFailoverIPRouting(currentFailoverIPServer):
-                    logger.info("FailoverIP routing deleted...")
-
-                    logger.info("Set new FailoverIP routing to " +
-                                firstPingableServer.nickname + " ... ")
-                    if netcupAPI.setFailoverIPRouting(firstPingableServer):
-                        slack = Slack(slackWebhookURL, logger)
-                        slack.sendMessage(
-                            'Failover successfull from ' + currentFailoverIPServer.nickname + ' to ' + firstPingableServer.nickname)
-
-                    else:
-                        logger.error("Error in new Routing ... Restart ...")
-                else:
-                    logger.error("Error in deleting IP Routing ... Restart.")
-            else:
-                logger.info(
-                    "Dry run is active, no action ...")
-        else:
-            logger.error(
-                "Seem to be a netcup problem, server is reachable or netcup API is unreachable, no action ....")
-    # wait 10 sec
-    time.sleep(10)
+            logger.error('Error in new Routing ... Restart')
+            slack.sendMessage('Error in Failover ...')
+    else:
+        slack.sendMessage('Error in Failover ...')

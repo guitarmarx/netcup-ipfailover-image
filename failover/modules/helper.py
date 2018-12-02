@@ -1,14 +1,6 @@
 import os
 import logging
-import time
-import requests
 import socket
-
-
-def getFirstPingableServer(failoverServers):
-    for failoverServer in failoverServers:
-        if failoverServer.isPingable():
-            return failoverServer
 
 
 def initLogging(logFormat, logLevel,  logFile):
@@ -40,18 +32,11 @@ def checkParameterAvailable():
     return True
 
 
-def checkFailoverIP(ipAddress):
+def checkIPFormat(ipAddress):
     try:
         socket.inet_aton(ipAddress)
         return True
     except socket.error:
-        return False
-
-
-def checkNetcupUserLogin():
-    if os.environ['NETCUP_USER'] is not None and os.environ['NETCUP_PASSWORD']:
-        return True
-    else:
         return False
 
 
