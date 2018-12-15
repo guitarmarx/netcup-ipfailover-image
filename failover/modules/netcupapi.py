@@ -1,6 +1,6 @@
 import logging
 from zeep import Client
-from vserver import VServer
+from .vserver import VServer
 import os
 import time
 import sys
