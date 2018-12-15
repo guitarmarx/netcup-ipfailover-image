@@ -23,10 +23,6 @@ if not helper.checkParameterAvailable():
 elif not (helper.checkIPFormat(os.environ['FAILOVER_IP'])):
     logger.error('Wrong format for parameter FAILOVER_IP...Abort')
     sys.exit(1)
-elif not helper.checkFailoverServers():
-    logger.error(
-        'incorrect parameter count for FAILOVER_SERVER_MAC_X and FAILOVER_SERVER_X...Abort')
-    sys.exit(1)
 
 
 #####     PARAMETER     #####
