@@ -11,13 +11,10 @@ netcupAPI = NetcupAPI(netcupAPIUrl, netcupUser, netcupPassword,
                       failoverIP, failoverIPNetmask, logger)
 
 
-server = netcupAPI.getAllVserverNames()
-
-for s in server:
-    print(netcupAPI.getAllIPsFromVServer(s))
-
-
 test = "v1,v2,v3"
 
 sep = test.split(',')
 print(sep)
+
+for s in sep:
+    print(s)

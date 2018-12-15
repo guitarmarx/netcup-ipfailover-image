@@ -57,7 +57,7 @@ class NetcupAPI:
         return processes
 
     def getAllIPsFromVServer(self, vServerName):
-        self.logger.info("get ip for: " + vServerName)
+        self.logger.debug("get ip for: " + vServerName)
         ipadresses = self.client.service.getVServerIPs(
             loginName=self.netcupUser, password=self.netcupPassword, vserverName=vServerName)
         return ipadresses
@@ -138,7 +138,7 @@ class NetcupAPI:
         # get parameter from ENVIRONMENT
 
         failoverServers = []
-        serverNames = os.environ['FAILOVER_SERVER_LIST'].split()
+        serverNames = os.environ['FAILOVER_SERVER_LIST'].split(',')
 
         for name in serverNames:
             vServer = self.createFailoverServerObject(name)
