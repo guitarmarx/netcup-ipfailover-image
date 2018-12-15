@@ -65,18 +65,6 @@ while True:
     currentFailoverIPServer = netcupAPI.getCurrentIPFailoverServer(
         failoverServers)
 
-    if currentFailoverIPServer is None:
-        #FailoverIP is not assigned
-        logger.warn('FailoverIP is not assigned. Assign to ' +
-                    firstPingableServer.nickname)
-        netcupAPI.setFailoverIPRouting(firstPingableServer)
-        logger.info('FailoverIP assigned, continue monitoring...')
-        time.sleep(10)
-        continue
-    else:
-        logger.info('Current failover server is ' +
-                    currentFailoverIPServer.nickname)
-
     if netcupAPI.isPingable(currentFailoverIPServer.ipAddress):
         # current assigned failoverIP server is reachable --> no action (netcup infrastcuture problem)
         logger.info(
@@ -93,6 +81,18 @@ while True:
         # dry run is active
         logger.info('Dry Run is active, no action ...')
         continue
+
+    if currentFailoverIPServer is None:
+        #FailoverIP is not assigned
+        logger.warn('FailoverIP is not assigned. Assign to ' +
+                    firstPingableServer.nickname)
+        netcupAPI.setFailoverIPRouting(firstPingableServer)
+        logger.info('FailoverIP assigned, continue monitoring...')
+        time.sleep(10)
+        continue
+    else:
+        logger.info('Current failover server is ' +
+                    currentFailoverIPServer.nickname)
 
 
 #######    FAILOVER    #######
