@@ -33,8 +33,7 @@ Parameter | Function| Default Value|
 NETCUP_API_URL |Netcup SCP Webservice API | https://www.vservercontrolpanel.de:443/WSEndUser?wsdlv
 NETCUP_USER | Netcup user  | -
 NETCUP_PASSWORD | Netcup Password | -
-FAILOVER_SERVER_[<number>] | Netcup server name e.g. "v22016063665435548"| -
-FAILOVER_SERVER_MAC_[<number>] | Netcup server MAC | -
+FAILOVER_SERVER_LIST | Netcup comma separated server list name e.g. "v22016063665435548,v22016063665435512"| -
 SLACK_WEBHOOK_URL | Slack webhook url | https://hooks.slack.com/services/<TOKEN>
 TIME_BETWEEN_PINGS | Time between two pings in seconds, after that, a failover will be initiated | 60
 DRY_RUN | if set, the container monitors the failover ip, but won't reassign the failoverIP if a server is down | FALSE
