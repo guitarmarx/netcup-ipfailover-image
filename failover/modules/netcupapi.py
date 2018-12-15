@@ -1,6 +1,6 @@
 import logging
 from zeep import Client
-from .vserver import VServer
+from vserver import VServer
 import os
 import time
 import sys
@@ -75,9 +75,9 @@ class NetcupAPI:
             return False
 
     def getVServerMac(self, vServerName):
-        mac = self.client.service.getVServerMac(
-            loginName=self.netcupUser, password=self.netcupPassword, vserverName=vServerName)
-        return mac
+        info = self.getVServerInformation(vServerName)
+        print(info['serverInterfaces'])
+        return info['serverInterfaces'][0]['mac']
 
     def setFailoverIPRouting(self, vServer):
         try:
@@ -123,11 +123,11 @@ class NetcupAPI:
             if failoverServer.isPingable():
                 return failoverServer
 
-    def createFailoverServerObject(self, vServerName, vServerMac):
+    def createFailoverServerObject(self, vServerName):
         vServerName = vServerName
-        vServerMac = vServerMac
         vServerNickname = self.getVServerNickname(vServerName)
         vServerIP = self.getVServerIP(vServerName, self.failoverIP)
+        vServerMac = self.getVServerMac(vServerName)
 
         vServer = VServer(vServerName, vServerNickname,
                           vServerMac, vServerIP)
@@ -137,20 +137,11 @@ class NetcupAPI:
         # get parameter from ENVIRONMENT
 
         failoverServers = []
-        failoverServerNames = []
-        failoverServerMacs = []
+        serverNames = os.environ['FAILOVER_SERVER_LIST'].split()
 
-        for env in os.environ:
-            if "FAILOVER_SERVER_MAC" in env:
-                failoverServerMacs.append(os.environ[env])
-            elif "FAILOVER_SERVER_" in env:
-                failoverServerNames.append(os.environ[env])
-
-        for i in range(len(failoverServerNames)):
-            vServer = self.createFailoverServerObject(
-                failoverServerNames[i], failoverServerMacs[i])
+        for name in serverNames:
+            vServer = self.createFailoverServerObject(name)
             failoverServers.append(vServer)
-
         return failoverServers
 
     def getCurrentIPFailoverServer(self, failoverServers):
