@@ -57,6 +57,7 @@ class NetcupAPI:
         return processes
 
     def getAllIPsFromVServer(self, vServerName):
+        self.logger.info("get ip for: " + vServerName)
         ipadresses = self.client.service.getVServerIPs(
             loginName=self.netcupUser, password=self.netcupPassword, vserverName=vServerName)
         return ipadresses

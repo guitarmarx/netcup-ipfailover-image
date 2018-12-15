@@ -1,4 +1,4 @@
-from netcupapi import NetcupAPI
+from modules.netcupapi import NetcupAPI
 
 netcupAPIUrl = 'https://www.servercontrolpanel.de:443/WSEndUser?wsdl'
 netcupUser = '48701'
@@ -11,10 +11,10 @@ netcupAPI = NetcupAPI(netcupAPIUrl, netcupUser, netcupPassword,
                       failoverIP, failoverIPNetmask, logger)
 
 
-#server = netcupAPI.getAllVserverNames()
+server = netcupAPI.getAllVserverNames()
 
-# for s in server:
-#    print(netcupAPI.getVServerMac(s))
+for s in server:
+    print(netcupAPI.getAllIPsFromVServer(s))
 
 
 test = "v1,v2,v3"
