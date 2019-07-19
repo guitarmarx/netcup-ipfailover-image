@@ -10,7 +10,7 @@ ENV NETCUP_API_URL="https://www.servercontrolpanel.de:443/WSEndUser?wsdl" \
 	TIME_BETWEEN_PINGS=60 \
 	FAILOVER_SERVER_LIST="" \
 	SLACK_WEBHOOK_URL="https://hooks.slack.com/services/<TOKEN>" \
-	DRY_RUN=FALSE \
+	DRY_RUN='' \
 	LOG_LEVEL=INFO
 
 RUN apt update \

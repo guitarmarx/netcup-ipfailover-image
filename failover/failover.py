@@ -77,9 +77,9 @@ while True:
             'Netcup SCP API is unreachable, failoverIP cannot be swiched ... ')
         continue
 
-    if isDryRun is not 'FALSE':
-        # dry run is active
-        logger.info('Dry Run is active, no action ...')
+    if isDryRun == 'ENABLED':
+        # dry run is enabled
+        logger.info('Dry Run is enabled, no action ...')
         continue
 
     if currentFailoverIPServer is None:
