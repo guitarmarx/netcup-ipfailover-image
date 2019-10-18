@@ -3,7 +3,7 @@ pipeline {
     environment{
         dockerRegistry='registry.meteorit-leipzig.de'
         image="failover"
-        version="${BRANCH_NAME}"
+        version="${BRANCH_NAME == 'master' ? 'latest' : BRANCH_NAME}"
     }
     stages {
         stage('Build Image'){
